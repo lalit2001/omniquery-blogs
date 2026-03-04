@@ -42,7 +42,7 @@ Three technologies make AI for BI work at production scale:
 
 - **Large Language Models (LLMs)**: Models like GPT-4 or custom fine-tuned models that understand the semantics of a business question and map it to the correct SQL pattern.
 - **Natural Language to SQL (NL2SQL)**: The translation layer that converts English (or any language) into syntactically correct, semantically accurate SQL.
-- **Federated Query Engines**: Systems like Apache Trino that can query multiple databases (PostgreSQL, MongoDB, Snowflake, BigQuery, S3) as if they were a single source — critical for cross-system BI questions.
+- **Federated Query Engines**: OmniQuery's built-in federation layer can query multiple databases (PostgreSQL, MongoDB, Snowflake, BigQuery, S3) as if they were a single source — critical for cross-system BI questions.
 
 OmniQuery combines all three layers into a single platform: LLM-powered NL2SQL, schema-aware query generation, and federated execution across your entire data estate.
 
@@ -79,7 +79,7 @@ This query is then validated against the actual schema before execution. If it f
 
 ### Step 3 — Federated Execution
 
-OmniQuery routes the query through Apache Trino, which:
+OmniQuery routes the query through its federated query engine, which:
 - Identifies which data source(s) the query touches (PostgreSQL, Snowflake, MongoDB, etc.)
 - Pushes down filters to each source for performance
 - Joins and aggregates results in-memory
@@ -154,7 +154,7 @@ Enterprise databases have hundreds of tables with cryptic names (`tbl_usr_act_lo
 "Revenue" might exist in three tables: `orders.total_amount`, `invoices.revenue_recognized`, and `subscriptions.mrr`. OmniQuery's schema-aware resolver picks the right one based on the query context and data type, and flags ambiguity to the user when needed.
 
 ### 3. Multi-Database Joins
-A question like *"Which customers who opened a support ticket also churned within 30 days?"* requires joining Zendesk data (in PostgreSQL) with subscription data (in Snowflake). Trino-powered federation in OmniQuery makes this a single, natural language question.
+A question like *"Which customers who opened a support ticket also churned within 30 days?"* requires joining Zendesk data (in PostgreSQL) with subscription data (in Snowflake). OmniQuery's federation layer makes this a single, natural language question.
 
 ### 4. Query Validation & Self-Healing
 LLM-generated SQL can fail for subtle reasons — wrong column name casing, dialect differences (PostgreSQL vs. MySQL syntax), or schema mismatches from recent migrations. OmniQuery's self-healing loop:

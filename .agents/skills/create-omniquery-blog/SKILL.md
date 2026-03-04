@@ -136,7 +136,7 @@ Examples:
 
 **Step 1 — Generate the SVG using create-pixel-art:**
 Invoke the `create-pixel-art` skill with a description of the diagram needed. Example prompt:
-> "Create a pixel art flow diagram showing: PostgreSQL → OmniQuery Agent → Trino → SQL Result, with animated flow dots and OmniQuery watermark"
+> "Create a pixel art flow diagram showing: PostgreSQL → OmniQuery Agent → SQL DB → SQL Result, with animated flow dots and OmniQuery watermark"
 
 **Step 2 — Save the SVG to the assets mirror folder:**
 ```
@@ -193,7 +193,7 @@ Alt text on SVG images is used as a caption AND for SEO. Make it descriptive:
 ![diagram](https://raw.githubusercontent.com/...)
 
 <!-- Good -->
-![NL2SQL flow: natural language query → OmniQuery agent → Trino SQL → result table](https://raw.githubusercontent.com/...)
+![NL2SQL flow: natural language query → OmniQuery agent → SQL DB → result table](https://raw.githubusercontent.com/...)
 ```
 
 ---
@@ -345,7 +345,7 @@ NL2SQL (Natural Language to SQL) is AI technology that translates plain English 
 
 ## How NL2SQL Works: Step by Step
 
-![NL2SQL architecture: natural language → OmniQuery agent → Trino SQL → result](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/nl2sql/nl2sql-flow.svg)
+![NL2SQL architecture: natural language → OmniQuery agent → SQL DB → result](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/nl2sql/nl2sql-flow.svg)
 
 ### 1. Natural Language Understanding
 ...
