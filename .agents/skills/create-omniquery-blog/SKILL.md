@@ -1,22 +1,51 @@
 ---
 name: create-omniquery-blog
-description: Use this skill when the user asks to "write a blog post", "create a blog", "write an article", "draft a post" about any OmniQuery-related topic — NL2SQL, data federation, AI analytics, integrations, product features, tutorials, or comparisons. Writes a complete MDX file ready to commit to the omniquery-blogs GitHub repo.
+description: Use this skill when the user asks to "write a blog post", "create a blog", "write an article", "draft a post" about any OmniQuery-related topic — NL2SQL, data federation, AI analytics, integrations, product features, tutorials, or comparisons. Writes a complete MDX file ready to commit to the omniquery-blogs GitHub repo, including pixel art SVG diagrams generated via the create-pixel-art skill.
 ---
 
 # Create OmniQuery Blog Post
 
-Write a complete, publication-ready MDX blog post for OmniQuery and save it to the correct location in the `omniquery-blogs` GitHub repository structure.
+Write a complete, publication-ready MDX blog post for OmniQuery. This skill works alongside the `create-pixel-art` skill — use it to generate SVG diagrams and flow charts that are embedded in the post.
 
 ## Repository & Publishing Info
 
 - **GitHub repo**: `https://github.com/lalit2001/omniquery-blogs`
-- **Local clone path** (if working locally): anywhere — the file just needs to be committed to the repo
 - **Published at**: `https://omniquery.ai/blog/{category}/{slug}`
-- **Cache refresh**: Posts appear on the site within 1 hour of being pushed (ISR revalidate)
+- **Cache refresh**: Posts go live within 1 hour of pushing to `main` (ISR revalidate)
 
-## Folder Structure (Categories)
+---
 
-Each top-level folder is a category shown as a filter tab on `/blog`. Put the MDX file inside the matching category folder:
+## Folder Structure
+
+The repo has two parallel folder trees — one for MDX posts, one for SVG assets. **Mirror the category folder** when saving SVG files.
+
+```
+omniquery-blogs/
+├── nl2sql/
+│   └── what-is-nl2sql.mdx          ← blog post
+├── tutorials/
+│   └── connecting-postgresql.mdx
+├── integrations/
+│   └── mongodb-setup.mdx
+├── product/
+├── ai-analytics/
+├── case-studies/
+├── engineering/
+│
+└── assets/                         ← ALL SVG/image files go here
+    ├── nl2sql/                      ← mirrors nl2sql/ category
+    │   ├── nl2sql-flow.svg
+    │   └── accuracy-comparison.svg
+    ├── tutorials/                   ← mirrors tutorials/ category
+    │   └── connection-diagram.svg
+    ├── integrations/
+    ├── product/
+    ├── ai-analytics/
+    ├── case-studies/
+    └── engineering/
+```
+
+### Category folders for posts
 
 | Folder | Use for |
 |--------|---------|
@@ -28,250 +57,327 @@ Each top-level folder is a category shown as a filter tab on `/blog`. Put the MD
 | `case-studies/` | Customer stories, ROI, use cases by industry |
 | `engineering/` | Architecture deep dives, technical decisions, internals |
 
-If the topic doesn't fit any existing folder, create a new sensibly named folder (lowercase, hyphen-separated).
+---
 
 ## Required Frontmatter
 
-Every MDX file MUST start with this frontmatter block:
+Every MDX file MUST start with this block. All SEO fields are required:
 
 ```yaml
 ---
-title: "Your Post Title Here"
+title: "Primary Keyword — Secondary Keyword | OmniQuery"
 date: "YYYY-MM-DD"
 slug: "url-friendly-slug-matching-filename"
-description: "One or two sentences. Used for SEO meta description and card preview. Keep under 160 chars."
+description: "Action-oriented 1–2 sentences under 160 chars. State the benefit and include the primary keyword."
 tags: ["tag1", "tag2", "tag3"]
 author: "Author Full Name"
-authorImage: "https://publicly-accessible-avatar-url.jpg"
+authorImage: "https://github.com/lalit2001.png"
 readTime: "X min read"
 ---
 ```
 
 ### Frontmatter rules
-- `slug` must exactly match the filename (without `.mdx`)
-- `date` must be `YYYY-MM-DD` format
-- `tags` — 3 to 6 lowercase tags relevant to the content
-- `readTime` — estimate based on ~200 words/min (e.g. 1000 words = "5 min read")
-- `authorImage` — use a publicly accessible URL. GitHub avatar: `https://github.com/{username}.png`
+- `title` — include primary keyword early; append `| OmniQuery` for brand SEO
+- `slug` — must exactly match the filename (without `.mdx`), keyword-rich
+- `date` — `YYYY-MM-DD` format
+- `description` — under 160 chars, includes primary keyword, action-oriented (e.g. "Learn how…", "Discover…")
+- `tags` — 3–6 lowercase tags, mix of specific (`nl2sql`) and broad (`analytics`, `ai`)
+- `readTime` — estimate at ~200 words/min (1000 words = "5 min read")
+- `authorImage` — GitHub avatar URL: `https://github.com/{username}.png`
 
-## File Naming
+---
 
-- Filename = slug + `.mdx`
-- All lowercase, words separated by hyphens
-- Descriptive and URL-friendly
-- Example: `what-is-nl2sql.mdx`, `connecting-postgresql-omniquery.mdx`
+## SEO Best Practices
+
+### Title formula
+```
+Primary Keyword: What/How/Why + Benefit | OmniQuery
+```
+Examples:
+- `"NL2SQL Explained: How AI Turns Questions into SQL in Milliseconds | OmniQuery"`
+- `"Connecting PostgreSQL to OmniQuery: Step-by-Step Guide | OmniQuery"`
+- `"OmniQuery vs Dashboards: Why Natural Language Wins for Ad-hoc Analytics | OmniQuery"`
+
+### Description formula
+```
+[Action verb] + [primary keyword] + [benefit/outcome]. [Supporting detail].
+```
+Examples:
+- `"Discover how NL2SQL converts plain English to SQL instantly—no analyst needed. See benchmarks, real examples, and how OmniQuery does it."`
+- `"Step-by-step guide to connecting PostgreSQL to OmniQuery. Enable natural language queries on your Postgres data in under 5 minutes."`
+
+### In-content SEO checklist
+- [ ] Primary keyword in H1 title
+- [ ] Primary keyword in first 100 words of body
+- [ ] 3–5 H2 headings that match search intent phrases
+- [ ] At least one H3 per H2 section
+- [ ] Internal links: link to `/contact?type=demo` and relevant `/blog` posts
+- [ ] External links: link to official docs of mentioned technologies (PostgreSQL, etc.)
+- [ ] Alt text on all images = descriptive keyword phrase, not just "image"
+- [ ] At least one table or comparison for featured snippet targeting
+
+---
+
+## SVG Diagrams — Generating with create-pixel-art Skill
+
+**Every technical blog post should have at least one custom SVG diagram.** Use the `create-pixel-art` skill to generate it.
+
+### When to generate SVGs
+
+| Post type | Suggested SVG |
+|-----------|--------------|
+| Architecture / how-it-works | Flow diagram showing data path |
+| Integration guide | Connection diagram (source → OmniQuery → output) |
+| Comparison post | Side-by-side comparison canvas |
+| Tutorial | Step diagram showing the process |
+| Benchmark / metrics | Bar chart pixel canvas |
+
+### Workflow for generating and embedding an SVG
+
+**Step 1 — Generate the SVG using create-pixel-art:**
+Invoke the `create-pixel-art` skill with a description of the diagram needed. Example prompt:
+> "Create a pixel art flow diagram showing: PostgreSQL → OmniQuery Agent → Trino → SQL Result, with animated flow dots and OmniQuery watermark"
+
+**Step 2 — Save the SVG to the assets mirror folder:**
+```
+assets/{category}/{descriptive-name}.svg
+```
+Example: `assets/nl2sql/nl2sql-architecture-flow.svg`
+
+**Step 3 — Get the raw GitHub URL:**
+
+GitHub blob URL (what you see in browser):
+```
+https://github.com/lalit2001/omniquery-blogs/blob/main/assets/nl2sql/nl2sql-architecture-flow.svg
+```
+
+Raw content URL (what to use in MDX — replace `github.com` path):
+```
+https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/nl2sql/nl2sql-architecture-flow.svg
+```
+
+**Conversion rule:**
+```
+github.com/{user}/{repo}/blob/{branch}/{path}
+        ↓
+raw.githubusercontent.com/{user}/{repo}/{branch}/{path}
+```
+
+**Step 4 — Embed in MDX:**
+
+Option A — Raw URL (SVG hosted in assets/ folder):
+```md
+![NL2SQL Architecture: How OmniQuery converts natural language to SQL](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/nl2sql/nl2sql-architecture-flow.svg)
+```
+
+Option B — Inline SVG (paste SVG code directly into MDX):
+```mdx
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <!-- SVG content here — animations work, no hosting needed -->
+</svg>
+```
+
+### When to use each option
+
+| Option | Use when | Pros | Cons |
+|--------|----------|------|------|
+| Raw URL | SVG committed to repo | Clean MDX, easy to update SVG separately | Needs file committed first |
+| Inline SVG | Quick/one-off diagrams | No separate file needed, instant | Makes MDX file large |
+
+> **Always use the raw URL approach** for reusable diagrams. Inline SVG for quick one-off visuals only.
+
+### Alt text for SVGs (SEO)
+Alt text on SVG images is used as a caption AND for SEO. Make it descriptive:
+```md
+<!-- Bad -->
+![diagram](https://raw.githubusercontent.com/...)
+
+<!-- Good -->
+![NL2SQL flow: natural language query → OmniQuery agent → Trino SQL → result table](https://raw.githubusercontent.com/...)
+```
+
+---
 
 ## Content Structure
 
-Structure every post with these sections (adapt as needed):
-
 ```
-# Post Title (H1 — only one per post)
+# H1 Title (matches frontmatter title, includes primary keyword)
 
-Opening paragraph — hook the reader, state the problem or question.
+Opening hook — bold claim, striking stat, or vivid problem statement.
+Include primary keyword naturally within first 100 words.
 
-## Section 1 (H2)
-...
+## H2: Section matching a search intent phrase
+Brief intro sentence.
 
-### Subsection (H3 if needed)
-...
+### H3: Subsection
+Content...
 
-## Section 2 (H2)
-...
+## H2: Another Section
+
+![Descriptive alt text for SEO](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/{category}/{name}.svg)
+
+## H2: Comparison or Data Section
+
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| ...      | ...      | ...      |
 
 ## Conclusion
-Summarise key takeaways. End with a CTA pointing to OmniQuery.
+3–5 key takeaways as bullet points, then CTA.
 ```
 
-### CTA at the end (always include)
+### CTA (always include at the end)
 ```md
 ---
 
-**Ready to try OmniQuery?** [Book a demo](/contact?type=demo) or [start building](/contact?type=demo) — turn every employee into a data analyst.
+**Ready to experience OmniQuery?** [Book a free demo](/contact?type=demo) or [start building](/contact?type=demo) — turn every business question into an instant SQL insight.
 ```
 
-## Markdown Features Supported
+---
 
-All GitHub Flavored Markdown (GFM) is supported:
+## Supported MDX Features
 
-### Images
+### Regular images
 ```md
-![Alt text / caption](https://publicly-accessible-image-url.jpg)
+![Descriptive alt text](https://publicly-accessible-image-url.jpg)
 ```
-- Use public URLs only (Unsplash, your CDN, GitHub raw, etc.)
-- Alt text is shown as a caption below the image
-- Recommended width: 800px+
 
-### Tables
+### SVG from GitHub assets
 ```md
-| Column A | Column B | Column C |
-|----------|----------|----------|
-| Value    | Value    | Value    |
+![Flow description for SEO](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/{category}/{name}.svg)
+```
+
+### Inline SVG (animations work)
+```mdx
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- paste SVG code directly -->
+</svg>
+```
+
+### Tables (featured snippet targeting)
+```md
+| Aspect | Traditional BI | OmniQuery NL2SQL |
+|--------|---------------|------------------|
+| Setup time | Days | Minutes |
+| Ad-hoc queries | Limited | Unlimited |
 ```
 
 ### Code blocks
 ````md
 ```sql
 SELECT region, SUM(revenue) AS total
-FROM sales
-WHERE quarter = 'Q4'
-GROUP BY region
-ORDER BY total DESC;
+FROM sales WHERE quarter = 'Q4'
+GROUP BY region ORDER BY total DESC;
 ```
 ````
+Supported: `sql`, `python`, `bash`, `typescript`, `javascript`, `yaml`, `json`
 
-Supported languages: `sql`, `python`, `bash`, `typescript`, `javascript`, `yaml`, `json`
-
-### Callouts (blockquotes)
+### Callouts
 ```md
-> **Pro tip:** OmniQuery automatically retries failed SQL with self-healing logic up to 3 times.
+> **Pro tip:** OmniQuery self-heals SQL — if the generated query fails validation, it retries with the error context up to 3 times automatically.
 ```
+
+---
 
 ## Writing Guidelines
 
-### Tone & Voice
-- **Authoritative but approachable** — expert insights without jargon overload
-- **Practical** — always answer "so what?" and "how do I use this?"
-- **OmniQuery-first** — tie concepts back to OmniQuery capabilities naturally, not forcefully
+### Tone
+- **Authoritative but approachable** — expert insights, no unnecessary jargon
+- **Practical** — always answer "so what?" and "how do I use this today?"
+- **OmniQuery-first** — tie every concept back to OmniQuery naturally
 
-### Content Quality Checklist
-- [ ] Opening paragraph hooks the reader with a problem or bold claim
-- [ ] Each H2 section delivers one clear idea
-- [ ] At least one code example, table, or image per technical post
-- [ ] Real numbers and specifics (avoid vague claims like "much faster")
-- [ ] Comparisons are fair — acknowledge trade-offs
-- [ ] Conclusion summarises 3-5 key takeaways
-- [ ] Ends with a CTA
+### Content quality checklist
+- [ ] H1 includes primary keyword
+- [ ] Primary keyword in first 100 words
+- [ ] At least 1 custom SVG diagram (generated via `create-pixel-art`)
+- [ ] At least 1 table for comparison or data
+- [ ] At least 1 code example for technical posts
+- [ ] Each H2 delivers one clear idea
+- [ ] Real numbers and specifics — no vague claims
+- [ ] CTA at the end linking to `/contact?type=demo`
+- [ ] Alt text on all images is descriptive (not generic)
 
-### SEO
-- Title should include the primary keyword naturally
-- Description should be compelling and under 160 characters
-- Use the primary keyword in the first 100 words of body content
-- Use H2/H3 headings that people would search for
-
-## Topic Ideas by Category
-
-### nl2sql/
-- What is NL2SQL and how does it work
-- NL2SQL accuracy benchmarks: OmniQuery vs competitors
-- How OmniQuery validates and self-heals SQL
-- NL2SQL for non-technical users: a guide
-- Complex queries with NL2SQL: joins, aggregations, subqueries
-
-### tutorials/
-- Getting started with OmniQuery in 5 minutes
-- Connecting your first PostgreSQL database
-- Building a sales dashboard with natural language
-- Setting up role-based access control
-- How to embed OmniQuery in your SaaS product
-
-### integrations/
-- Connecting MongoDB to OmniQuery
-- Using OmniQuery with Snowflake
-- Federated queries across PostgreSQL and S3
-- Trino federation with OmniQuery explained
-
-### ai-analytics/
-- Why LLMs are better than dashboards for ad-hoc analysis
-- Multi-LLM support: choosing between GPT-4, Claude, and Gemini
-- The future of business intelligence: conversational data
-
-### engineering/
-- How OmniQuery's LangGraph agent works
-- ChromaDB and RAG for schema retrieval
-- Self-healing SQL: the validate-retry loop
-- Multi-arch Docker builds for OmniQuery
+---
 
 ## Step-by-Step Workflow
 
-1. **Clarify the topic** — ask the user for topic, target audience, and any specific angle if not provided
-2. **Choose the category folder** — pick from the table above or create a new one
-3. **Generate the slug** — lowercase, hyphen-separated, keyword-rich
-4. **Write the full post** — frontmatter + complete body with all sections
-5. **Save the file** — write to the correct path: `{category}/{slug}.mdx`
-6. **Confirm** — tell the user the file path and the URL it will be published at
+1. **Clarify the topic** — get topic, target audience, primary keyword, and any specific angle
+2. **Choose the category folder** — pick from the table or create a new lowercase hyphenated folder
+3. **Generate the slug** — lowercase, hyphen-separated, keyword-rich, matches filename
+4. **Plan SVG diagrams** — decide which diagrams would help (flow, comparison, architecture)
+5. **Generate SVGs** — invoke `create-pixel-art` skill for each diagram; save to `assets/{category}/{name}.svg`
+6. **Write the full post** — frontmatter + body with H1/H2/H3 structure, embedded SVGs via raw URLs, table, code block, CTA
+7. **Save the MDX** — write to `{category}/{slug}.mdx`
+8. **Confirm** — report: file path, SVG asset paths, published URL, and live time
+
+---
 
 ## Example Output
 
-File saved at: `nl2sql/what-is-nl2sql.mdx`
-Published URL: `https://omniquery.ai/blog/nl2sql/what-is-nl2sql`
-Appears on site: within 1 hour of pushing to `main`
+**Files to commit:**
+```
+nl2sql/what-is-nl2sql.mdx
+assets/nl2sql/nl2sql-flow.svg
+```
+
+**Published URL:** `https://omniquery.ai/blog/nl2sql/what-is-nl2sql`
+**Live:** within 1 hour of push to `main`
 
 ```mdx
 ---
-title: "What is NL2SQL? Plain English Queries for Your Database"
+title: "NL2SQL Explained: How AI Turns Plain English into SQL in Milliseconds | OmniQuery"
 date: "2026-03-03"
 slug: "what-is-nl2sql"
-description: "NL2SQL turns natural language questions into SQL queries instantly. Learn how it works and why it's replacing traditional dashboards."
-tags: ["nl2sql", "ai", "sql", "analytics"]
+description: "Discover how NL2SQL converts natural language questions into SQL instantly—no analyst needed. See how OmniQuery does it with real examples."
+tags: ["nl2sql", "ai", "sql", "analytics", "business-intelligence"]
 author: "Lalit Moharana"
 authorImage: "https://github.com/lalit2001.png"
 readTime: "6 min read"
 ---
 
-# What is NL2SQL? Plain English Queries for Your Database
+# NL2SQL Explained: How AI Turns Plain English into SQL in Milliseconds
 
-Ask your database a question in plain English and get an answer in seconds...
+Every business decision depends on data — but most employees can't write SQL...
 
-## How NL2SQL Works
+## What is NL2SQL?
 
+NL2SQL (Natural Language to SQL) is AI technology that translates plain English questions...
+
+## How NL2SQL Works: Step by Step
+
+![NL2SQL architecture: natural language → OmniQuery agent → Trino SQL → result](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/nl2sql/nl2sql-flow.svg)
+
+### 1. Natural Language Understanding
 ...
 
 ## NL2SQL vs Traditional Dashboards
 
-| Feature | Dashboards | NL2SQL |
-|---------|-----------|--------|
-| Setup time | Days | Minutes |
-| Ad-hoc queries | Limited | Unlimited |
-
-![NL2SQL query flow](https://...)
+| Feature | Traditional Dashboards | NL2SQL (OmniQuery) |
+|---------|----------------------|-------------------|
+| Time to insight | Days | Seconds |
+| Ad-hoc queries | Pre-built only | Unlimited |
+| User skill needed | BI tool training | Plain English |
 
 ## Getting Started with OmniQuery
 
-...
+```sql
+-- OmniQuery translates this question:
+-- "Show me top 5 products by revenue last quarter"
+SELECT product_name, SUM(revenue) as total_revenue
+FROM sales
+WHERE quarter = 'Q4' AND year = 2025
+GROUP BY product_name
+ORDER BY total_revenue DESC
+LIMIT 5;
+```
 
 ## Conclusion
 
-...
+- NL2SQL removes the technical barrier between employees and data
+- OmniQuery generates, validates, and self-heals SQL automatically
+- Time-to-insight drops from days to seconds
 
 ---
 
-**Ready to try OmniQuery?** [Book a demo](/contact?type=demo) and see NL2SQL in action on your own data.
+**Ready to experience OmniQuery?** [Book a free demo](/contact?type=demo) and see NL2SQL on your own data.
 ```
-
-
-
-# What is OmniQuery? Complete Guide to Features and Capabilities
-
-Organizations today have data spread across numerous databases, data warehouses, and data lakes. Accessing, querying, and distributing that data often requires complex workflows and technical expertise. OmniQuery solves this by providing a unified, AI-driven platform that completely transforms how both technical and non-technical teams interact with their data.
-
-Without diving into the complex technical internals, this guide walks you through what OmniQuery actually is, the core features you can leverage, and everything you can accomplish within the platform.
-
-## A Unified Hub: What Pages and Tools Do I Have?
-
-OmniQuery is designed with a clean, intuitive interface composed of purpose-driven pages and dashboards. Whether you're an administrator setting up database connections or an end-user running natural language queries, the platform offers a streamlined experience tailored to your role.
-
-### Multi-Database Support & Flexible Output Formats
-
-Data lives everywhere, which is why OmniQuery is built with extensive **multi-database support**. You can connect to a wide array of supported databases entirely from the UI, bringing all your disparate data sources into one federated view. 
-
-But querying is only half the battle—sharing results is just as critical. Whenever you run a query, you can export and visualize your results in nearly **all output formats**. Whether you need raw CSV or JSON data for another application, or fully rendered markdown tables and visual charts for a presentation, OmniQuery handles it seamlessly.
-
-## Core Features and Capabilities
-
-### 1. Robust User & Role Management
-Security and collaboration go hand-in-hand. OmniQuery provides comprehensive access control pages where administrators can:
-- **Add Users:** Quickly invite and onboard new team members to your organization's workspace.
-- **Add Roles:** Implement strict Role-Based Access Control (RBAC). You can define user roles and set precise permissions so that everyone has access to the data they need, without compromising sensitive information.
-
-### 2. Customisable AI Settings
-One of OmniQuery's standout features is its adaptable AI engine. Instead of a one-size-fits-all approach, you get dedicated settings pages to customize the "brain" powering your analytics:
-- **Save Embedding Settings:** Configure and tweak your embedding models to ensure OmniQuery perfectly understands the semantic context of your specific enterprise data.
-- **LLM Model Settings:** You're not locked into a single AI provider. Choose, configure, and save your preferred Large Language Model (LLM) settings to balance speed, cost, and analytical reasoning exactly how you want.
-
-### 3. Embeddable Analytics via IFrame
-Your data insights shouldn't be trapped inside the OmniQuery dashboard. We make it incredibly easy to share your findings with the rest of the world.
-- **Create and Share:** Instantly generate secure, interactive iframe snippets for any query result, chart, or dashboard.
-- **Embedded Capabilities:** Drop these iframes directly into your own SaaS applications, internal wikis (like Notion or Confluence), or client-facing portals. It takes just seconds to turn an OmniQuery insight into a native-feeling embedded analytics feature on your own site.
-
-OmniQuery shifts the focus from managing data infrastructure to actually extracting value from it. By combining broad multi-database support with powerful user management, adaptable AI model settings, and a robust embedded analytics engine, OmniQuery gives you a comprehensive toolkit to make your data work for you.
