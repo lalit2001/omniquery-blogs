@@ -1,0 +1,216 @@
+---
+title: "What is OmniQuery? Ask Your Data Anything, in Plain English | OmniQuery"
+date: "2026-03-05"
+slug: "what-is-omniquery"
+description: "Meet OmniQuery — the AI-powered data platform that lets anyone ask business questions in plain English and get instant SQL-powered answers from any database. No analysts needed."
+tags: ["omniquery", "product", "ai", "nl2sql", "data-analytics", "business-intelligence"]
+author: "Lalit Moharana"
+authorImage: "https://github.com/lalit2001.png"
+readTime: "7 min read"
+---
+
+# What is OmniQuery? Ask Your Data Anything, in Plain English
+
+Data is supposed to empower decisions. For most organizations, it does the opposite.
+
+Every time a product manager wants to understand why signups dropped last week, or a sales leader needs to know which deal sizes are closing fastest, or an ops team wants to track regional delivery times — someone has to write SQL. File a ticket. Wait two days. And hope the analyst understood the question correctly.
+
+**OmniQuery changes this.** It's an AI-powered data platform that lets anyone in your organization — not just engineers — ask questions about your live data in plain English and get instant, accurate answers. No SQL. No dashboards. No waiting.
+
+This is our first post introducing OmniQuery to the world. Here's everything you need to know about what we've built, why we built it, and where we're going.
+
+---
+
+## The Problem: Data Is Trapped Behind SQL
+
+In 2026, the average company runs on dozens of databases. PostgreSQL for transactional data. MongoDB for user events. Snowflake or BigQuery for the data warehouse. S3 for logs. And connecting them all requires either a massive ETL pipeline or a data team that's permanently behind on tickets.
+
+The result is a two-tier organization:
+
+- **The data-empowered**: engineers, analysts, and data scientists who can write SQL and access anything
+- **The data-excluded**: everyone else — product, sales, marketing, ops, finance — who must translate every question into a ticket, wait, and hope for the best
+
+This bottleneck is expensive. It slows decision-making, frustrates business teams, and burns out data analysts on repetitive work instead of high-value analysis.
+
+**OmniQuery eliminates this bottleneck entirely.**
+
+---
+
+## What OmniQuery Does
+
+![OmniQuery platform: business user ask → AI SQL generation → federated query → instant result table](https://raw.githubusercontent.com/lalit2001/omniquery-blogs/main/assets/product/omniquery-linkedin-poster.svg)
+
+OmniQuery is a **natural language interface for your databases**. It sits on top of your existing data infrastructure and lets any user — technical or not — interact with live data through plain questions.
+
+Here's the full loop:
+
+### 1. Ask in Plain English
+A business user types a question. No special syntax. No training. Just plain language:
+
+> *"Show me revenue by region for Q1 2026"*
+> *"Which customers haven't logged in for 14 days but are on an enterprise plan?"*
+> *"Compare churn rate this quarter vs same quarter last year"*
+
+### 2. OmniQuery AI Generates the SQL
+OmniQuery's AI engine — powered by GPT-4o, Claude, Gemini, or your own self-hosted model — understands the question in context of your actual database schemas. It generates precise SQL, validated against your live schema.
+
+```sql
+SELECT region, SUM(revenue) AS total_revenue
+FROM sales
+WHERE quarter = 'Q1' AND year = 2026
+GROUP BY region
+ORDER BY total_revenue DESC;
+```
+
+If the generated SQL has any issue, OmniQuery's **self-healing mechanism** automatically retries with error context — up to 3 times — before surfacing a graceful explanation. This brings first-attempt accuracy to **94%+** and resolved accuracy to **99%+**.
+
+### 3. Queries Your Databases Directly — All of Them
+OmniQuery connects to your databases directly. No data copying, no ETL sync, no stale snapshots. It queries live data across:
+
+| Database | Support |
+|----------|---------|
+| PostgreSQL | ✅ Native |
+| MySQL | ✅ Native |
+| MongoDB | ✅ Native |
+| Snowflake | ✅ Native |
+| BigQuery | ✅ Native |
+| Amazon S3 / MinIO | ✅ Native |
+| More coming | 🔜 |
+
+And here's the standout capability: **one question can span multiple databases simultaneously**. Ask *"Compare support tickets from the last 30 days with revenue drop for the same accounts"* — OmniQuery federates the query across your helpdesk data (PostgreSQL) and revenue data (Snowflake) in a single unified query. No joins written by hand.
+
+### 4. Returns Results in Under 500ms
+Results arrive as a clean, interactive table. For most queries, this takes under 500 milliseconds from when the user hits enter.
+
+---
+
+## Core Features
+
+### 🧠 AI-Powered NL2SQL
+The heart of OmniQuery is its natural language to SQL engine. It's schema-aware — meaning it ingests your actual table and column names, relationships, and data types at connection time, so it can reason about your data specifically, not just generic SQL patterns.
+
+### 🔗 Federated Queries
+OmniQuery's federation layer can join data across separate databases in a single query — something that would normally require building a custom ETL pipeline.
+
+### 🔁 Self-Healing SQL
+When a generated query fails — wrong column name, dialect mismatch, schema drift — OmniQuery automatically detects the error, appends the failure context to the prompt, and regenerates. Users almost never see query failures.
+
+### 🔐 Role-Based Data Access
+Not every user should see every table. OmniQuery's RBAC controls which schemas are visible to which users or teams — enforced at the query-generation level, not just the UI. A regional sales manager can only ask questions about their region's data.
+
+### 🖥️ Embeddable Anywhere
+OmniQuery can be embedded as an iFrame inside your internal portals, dashboards, Notion pages, or custom web apps. Users don't have to leave their existing workflows to access data.
+
+### 🤖 Bring Your Own LLM
+OmniQuery supports multiple LLM providers out of the box:
+- **OpenAI** (GPT-4o, GPT-4 Turbo)
+- **Anthropic** (Claude 3.5 Sonnet, Haiku)
+- **Google** (Gemini 1.5 Pro)
+- **Ollama** (self-hosted, for air-gapped environments)
+
+Security-conscious enterprises can run OmniQuery entirely on-premise with a locally-hosted model — no data ever leaves your network.
+
+### 👥 Multi-User & Teams
+Invite your entire organization. Each user gets their own access controls, query history, and saved questions. Team leaders can see all queries run by their team for audit and governance.
+
+---
+
+## Who OmniQuery Is For
+
+OmniQuery is built for data-rich organizations where the bottleneck between questions and answers is the requirement to know SQL or operate a BI tool.
+
+**Product teams** use OmniQuery to answer activation, retention, and feature adoption questions in real time — without filing data requests.
+
+**Sales & revenue teams** run pipeline analysis, forecast accuracy checks, and deal pattern queries on live CRM and transaction data.
+
+**Operations teams** query fulfillment timelines, SLA adherence, and resource utilization across operational databases.
+
+**Finance teams** run variance analysis, revenue reconciliation, and cost attribution queries without waiting for reports.
+
+**Data teams** use OmniQuery to reduce the volume of ad-hoc request tickets by 60–75%, freeing time for higher-leverage data work.
+
+---
+
+## How OmniQuery Compares
+
+| Feature | Traditional Dashboards | OmniQuery |
+|---------|----------------------|--------------------|
+| Time to insight | Days (new request) | < 500ms |
+| User skill needed | BI tool + SQL | Plain English |
+| Ad-hoc questions | Pre-built only | Unlimited |
+| Multi-database | Manual ETL | Federated, live |
+| Setup time | Days to weeks | Minutes |
+| Maintenance | High (stale dashboards) | Zero |
+
+Traditional BI tools like Tableau, Power BI, and Looker are powerful — for the 5–8% of your organization that can use them. OmniQuery makes data accessible to the other 92%.
+
+---
+
+## Getting Started in Minutes
+
+Setting up OmniQuery takes less time than explaining your question to an analyst.
+
+### Step 1 — Connect a Database
+
+Point OmniQuery at your database. It supports direct connection via host/credentials or connection strings.
+
+```yaml
+connections:
+  - name: production
+    type: postgresql
+    host: db.yourcompany.com
+    port: 5432
+    database: analytics
+    user: readonly_user
+```
+
+### Step 2 — Choose Your LLM
+
+Pick the AI model that fits your security and performance requirements.
+
+```yaml
+llm:
+  provider: openai
+  model: gpt-4o
+  api_key: ${OPENAI_API_KEY}
+```
+
+### Step 3 — Invite Your Team
+
+Add users, assign roles, and let them start asking questions. From here, every team member has instant access to live data — with no SQL required.
+
+That's it. Most teams are up and running in under 15 minutes.
+
+---
+
+## What's Next
+
+OmniQuery is in **active beta** — and we're building fast. On our near-term roadmap:
+
+- **Saved questions & dashboards** — pin your most-used queries as shareable cards
+- **Scheduled reports** — run a query every Monday morning and deliver results via email or Slack
+- **Chart generation** — automatically plot query results as bar charts, line charts, or pie charts
+- **Voice queries** — ask questions aloud, get answers read back
+- **More integrations** — Databricks, Redshift, Cassandra, ClickHouse
+
+We're shipping weekly. Follow us to stay up to date.
+
+---
+
+## Conclusion
+
+OmniQuery is built on a simple belief: **every person in your organization deserves access to data, not just the ones who learned SQL**.
+
+Key takeaways:
+
+- OmniQuery is a natural language interface for your databases — connect it, ask questions, get answers
+- It works across PostgreSQL, MongoDB, Snowflake, BigQuery, MySQL, and S3 — all at once
+- Self-healing SQL means 99%+ accuracy, even on complex cross-database queries
+- Role-based access ensures everyone only sees what they're allowed to see
+- Setup takes under 15 minutes — no ETL, no dashboards to build
+
+We're just getting started. The era of asking your data anything — from anywhere, by anyone — starts now.
+
+---
+
+**Try OmniQuery free at [omniquery.ai](https://omniquery.ai)** — or [book a live demo](/contact?type=demo) and we'll show you what it can do on your own data.
